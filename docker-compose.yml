@@ -1,0 +1,32 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:13.2
+    container_name: pcsm_db
+    restart: always
+    environment:
+      POSTGRES_DB: pcsm
+      POSTGRES_USER: pcsm
+      POSTGRES_PASSWORD: 1d6072bd25
+    volumes:
+      - pgdata:/var/lib/postgresql/data:rw
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+
+  pcsm_api:
+    image: api
+    container_name: pcsm_api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
+    external: true
